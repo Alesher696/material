@@ -29,7 +29,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   }),
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("mobile")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
@@ -85,104 +85,104 @@ export const NavBar = ({ children }: IProps) => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex" }}>
-        <Drawer
-          variant="permanent"
-          open={open}
-          onMouseEnter={handleDrawerOpen}
-          onMouseLeave={handleDrawerClose}
-        >
-          <List
-            sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+      <ThemeProvider theme={theme}>
+        <Box sx={{ display: "flex" }}>
+          <Drawer
+              variant="permanent"
+              open={open}
+              onMouseEnter={handleDrawerOpen}
+              onMouseLeave={handleDrawerClose}
           >
-            {navBarItems.slice(0, -1).map((item, index) => (
+            <List
+                sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+            >
+              {navBarItems.slice(0, -1).map((item, index) => (
+                  <ListItem
+                      key={`${item.id} key`}
+                      disablePadding
+                      sx={{ display: "block" }}
+                      onClick={() => navLinkHandle(item.route, index)}
+                  >
+                    <ListItemButton
+                        selected={selectedIndex === index}
+                        sx={{
+                          minHeight: 48,
+                          justifyContent: open ? "initial" : "center",
+                          px: 2.5,
+                        }}
+                    >
+                      <ListItemIcon
+                          sx={{
+                            minWidth: 0,
+                            width: 50,
+                            height: 50,
+                            backgroundColor:
+                                selectedIndex === index ? item.color : "#556cd6",
+                            borderRadius: "10px",
+                            mr: open ? 3 : "auto",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            boxShadow:
+                                selectedIndex === index
+                                    ? `0px 0px 35px 7px ${item.color}`
+                                    : "",
+                            "&:hover": {
+                              backgroundColor: item.color,
+                            },
+                          }}
+                      >
+                        <item.icon />
+                      </ListItemIcon>
+                      <ListItemText
+                          primary={item.label}
+                          sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+              ))}
               <ListItem
-                key={`${item.id} key`}
-                disablePadding
-                sx={{ display: "block" }}
-                onClick={() => navLinkHandle(item.route, index)}
+                  key={`${navBarItems[navBarItems.length - 1].id} key`}
+                  disablePadding
+                  sx={{ display: "block", mt: "auto" }}
+                  onClick={() => setSelectedIndex(null)}
               >
                 <ListItemButton
-                  selected={selectedIndex === index}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
                 >
                   <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      width: 50,
-                      height: 50,
-                      backgroundColor:
-                        selectedIndex === index ? item.color : "#556cd6",
-                      borderRadius: "10px",
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      boxShadow:
-                        selectedIndex === index
-                          ? `0px 0px 35px 7px ${item.color}`
-                          : "",
-                      "&:hover": {
-                        backgroundColor: item.color,
-                      },
-                    }}
+                      sx={{
+                        minWidth: 0,
+                        width: 50,
+                        height: 50,
+                        backgroundColor: "#556cd6",
+                        borderRadius: "10px",
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          backgroundColor: lastIcon.color,
+                        },
+                      }}
                   >
-                    <item.icon />
+                    <lastIcon.icon />
                   </ListItemIcon>
                   <ListItemText
-                    primary={item.label}
-                    sx={{ opacity: open ? 1 : 0 }}
+                      primary={navBarItems[navBarItems.length - 1].label}
+                      sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItemButton>
               </ListItem>
-            ))}
-            <ListItem
-              key={`${navBarItems[navBarItems.length - 1].id} key`}
-              disablePadding
-              sx={{ display: "block", mt: "auto" }}
-              onClick={() => setSelectedIndex(null)}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    width: 50,
-                    height: 50,
-                    backgroundColor: "#556cd6",
-                    borderRadius: "10px",
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    "&:hover": {
-                      backgroundColor: lastIcon.color,
-                    },
-                  }}
-                >
-                  <lastIcon.icon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={navBarItems[navBarItems.length - 1].label}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <DrawerHeader />
-          {children}
+            </List>
+          </Drawer>
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <DrawerHeader />
+            {children}
+          </Box>
         </Box>
-      </Box>
-    </ThemeProvider>
+      </ThemeProvider>
   );
 };
